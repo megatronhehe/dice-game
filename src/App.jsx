@@ -62,7 +62,7 @@ function App() {
 			}
 			setTimeout(() => {
 				setNotif(false);
-			}, 200);
+			}, 400);
 		}
 	}, [dice]);
 
@@ -85,10 +85,10 @@ function App() {
 	};
 
 	return (
-		<div className="flex items-center justify-center h-screen bg-gray-800">
+		<div className="flex items-center justify-center h-screen bg-gray-800 font-comfortaa">
 			<div className="relative w-full max-w-xl p-4 border border-gray-700 rounded-xl ">
 				{/* DICE */}
-				<div className="flex items-center justify-around text-xl text-gray-600 bg-gray-700 rounded-xl">
+				<div className="flex items-center justify-around py-4 text-xl text-gray-600 bg-gray-700 rounded-xl">
 					<PiDiamondsFourFill />
 					{dice && (
 						<div className="flex text-red-400 text-7xl ">
@@ -100,7 +100,7 @@ function App() {
 				</div>
 
 				{/* BET METHOD */}
-				<div className="flex justify-between gap-2 p-2 mt-4 text-sm text-red-400 border border-gray-700 rounded-md">
+				<div className="flex justify-between gap-2 p-2 mt-4 text-sm font-bold text-red-400 border border-gray-700 rounded-md">
 					<div className="flex gap-2">
 						<button
 							onClick={() => {
@@ -131,7 +131,7 @@ function App() {
 
 				{/* BALANCE */}
 				<div className="absolute flex items-center justify-center w-1/6 gap-2 p-2 mt-4 text-yellow-400 bg-gray-800 border border-yellow-400 rounded-md left-4 -top-12 bg-">
-					<PiCoinBold />
+					<PiCoinBold onClick={() => setBalance((prev) => prev + 100)} />
 					<p>{balance}</p>
 				</div>
 
