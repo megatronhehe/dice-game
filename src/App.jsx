@@ -27,7 +27,7 @@ function App() {
 	};
 
 	const handleBetAmount = (e) => {
-		setBetAmount(e.target.value);
+		setBetAmount(Number(e.target.value));
 	};
 
 	const betMethodEven = () => {
