@@ -17,6 +17,8 @@ function App() {
 	const [betAmount, setBetAmount] = useState(1);
 	const [balance, setBalance] = useState(100);
 	const [betMethod, setBetMethod] = useState("even");
+	const [notif, setNotif] = useState(false);
+	const [notifMessage, setNotifMessage] = useState("");
 
 	const getRandomDice = () => {
 		const die1 = Math.floor(Math.random() * 5 + 1);
@@ -32,8 +34,10 @@ function App() {
 		const diceCount = dice.die1 + dice.die2;
 		if (diceCount % 2 === 0) {
 			setBalance((prev) => prev + betAmount);
+			setNotifMessage(`+${betAmount}`);
 		} else {
 			setBalance((prev) => prev - betAmount);
+			setNotifMessage(`-${betAmount}`);
 		}
 	};
 
@@ -41,18 +45,24 @@ function App() {
 		const diceCount = dice.die1 + dice.die2;
 		if (diceCount % 2 === 1) {
 			setBalance((prev) => prev + betAmount);
+			setNotifMessage(`+${betAmount}`);
 		} else {
 			setBalance((prev) => prev - betAmount);
+			setNotifMessage(`-${betAmount}`);
 		}
 	};
 
 	useEffect(() => {
 		if (dice.die1 !== null && dice.die2 !== null) {
+			setNotif(true);
 			if (betMethod === "even") {
 				betMethodEven();
 			} else if (betMethod === "odd") {
 				betMethodOdd();
 			}
+			setTimeout(() => {
+				setNotif(false);
+			}, 200);
 		}
 	}, [dice]);
 
@@ -124,6 +134,17 @@ function App() {
 					<PiCoinBold />
 					<p>{balance}</p>
 				</div>
+
+				{/* RESULT NOTIF */}
+				{notif && (
+					<div
+						className={`absolute flex items-center justify-center gap-2 p-2 mt-4 -top-20 left-16 font-bold h-6 shadow-xl ${
+							notifMessage.startsWith("+") ? "text-green-400 " : "text-red-400"
+						}`}
+					>
+						<p>{notifMessage}</p>
+					</div>
+				)}
 
 				{/* BET AMOUNT */}
 				<div className="flex justify-between gap-2 p-2 mt-4 text-sm text-red-400 border border-gray-700 rounded-md ">
