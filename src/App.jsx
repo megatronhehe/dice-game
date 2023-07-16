@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
 	PiDiceOneFill,
@@ -28,6 +28,34 @@ function App() {
 		setBetAmount(e.target.value);
 	};
 
+	const betMethodEven = () => {
+		const diceCount = dice.die1 + dice.die2;
+		if (diceCount % 2 === 0) {
+			setBalance((prev) => prev + betAmount);
+		} else {
+			setBalance((prev) => prev - betAmount);
+		}
+	};
+
+	const betMethodOdd = () => {
+		const diceCount = dice.die1 + dice.die2;
+		if (diceCount % 2 === 1) {
+			setBalance((prev) => prev + betAmount);
+		} else {
+			setBalance((prev) => prev - betAmount);
+		}
+	};
+
+	useEffect(() => {
+		if (dice.die1 !== null && dice.die2 !== null) {
+			if (betMethod === "even") {
+				betMethodEven();
+			} else if (betMethod === "odd") {
+				betMethodOdd();
+			}
+		}
+	}, [dice]);
+
 	const diceElement = (dieNumber) => {
 		if (dieNumber === 1) {
 			return <PiDiceOneFill />;
@@ -48,7 +76,7 @@ function App() {
 
 	return (
 		<div className="flex items-center justify-center h-screen bg-gray-800">
-			<div className="w-full max-w-xl p-4 border border-gray-700 rounded-xl ">
+			<div className="relative w-full max-w-xl p-4 border border-gray-700 rounded-xl ">
 				{/* DICE */}
 				<div className="flex items-center justify-around text-xl text-gray-600 bg-gray-700 rounded-xl">
 					<PiDiamondsFourFill />
@@ -89,63 +117,76 @@ function App() {
 							odd
 						</button>
 					</div>
+				</div>
 
-					<button
-						onClick={getRandomDice}
-						className="px-4 py-2 font-semibold text-gray-800 bg-red-400 rounded-md"
-					>
-						Roll{" "}
-					</button>
+				{/* BALANCE */}
+				<div className="absolute flex items-center justify-center w-1/6 gap-2 p-2 mt-4 text-yellow-400 bg-gray-800 border border-yellow-400 rounded-md left-4 -top-12 bg-">
+					<PiCoinBold />
+					<p>{balance}</p>
 				</div>
 
 				{/* BET AMOUNT */}
-				<div className="flex items-center gap-2 p-2 mt-4 text-sm text-gray-700 border border-gray-700 rounded-md">
-					<div className="flex items-center gap-2 p-2 text-yellow-400 border border-yellow-400 rounded-md ">
-						<PiCoinBold />
-						<p>{balance}</p>
-					</div>
-
-					<div className="flex gap-2 ">
+				<div className="flex justify-between gap-2 p-2 mt-4 text-sm text-red-400 border border-gray-700 rounded-md ">
+					<div className="flex gap-2">
 						<label
-							className="flex items-center text-gray-500"
+							className="flex items-center px-2 bg-gray-700 rounded-md"
 							htmlFor="betAmount"
 						>
-							{" "}
-							bet amount :{" "}
+							<PiCoinBold />
 						</label>
 						<input
 							id="betAmount"
-							className="flex w-1/5 p-1 font-semibold text-center text-yellow-400 bg-gray-700 rounded-md outline-none"
+							className="flex p-1 font-semibold text-center text-yellow-400 bg-gray-700 rounded-md outline-none"
 							type="number"
 							onChange={handleBetAmount}
 							value={betAmount}
 						/>
-						<button
-							onClick={() => setBetAmount((prev) => prev * 2)}
-							className="px-2 text-gray-500 border border-gray-700 rounded-md"
-						>
-							x2
-						</button>
-						<button
-							onClick={() => setBetAmount((prev) => prev / 2)}
-							className="px-2 text-gray-500 border border-gray-700 rounded-md"
-						>
-							1/2
-						</button>
-						<button
-							onClick={() => setBetAmount(balance)}
-							className="px-2 text-gray-500 border border-gray-700 rounded-md"
-						>
-							max
-						</button>
-						<button
-							onClick={() => setBetAmount(0)}
-							className="px-2 text-gray-500 border border-gray-700 rounded-md"
-						>
-							clear
-						</button>
 					</div>
+					<button
+						onClick={() => setBetAmount((prev) => prev + 1)}
+						className="px-2 text-gray-500 border border-gray-700 rounded-md"
+					>
+						+1
+					</button>
+					<button
+						onClick={() => setBetAmount((prev) => prev + 10)}
+						className="px-2 text-gray-500 border border-gray-700 rounded-md"
+					>
+						+10
+					</button>
+					<button
+						onClick={() => setBetAmount((prev) => prev * 2)}
+						className="px-2 text-gray-500 border border-gray-700 rounded-md"
+					>
+						x2
+					</button>
+					<button
+						onClick={() => setBetAmount((prev) => prev / 2)}
+						className="px-2 text-gray-500 border border-gray-700 rounded-md"
+					>
+						1/2
+					</button>
+					<button
+						onClick={() => setBetAmount(balance)}
+						className="px-2 text-gray-500 border border-gray-700 rounded-md"
+					>
+						max
+					</button>
+					<button
+						onClick={() => setBetAmount(0)}
+						className="px-2 text-gray-500 border border-gray-700 rounded-md"
+					>
+						clear
+					</button>
 				</div>
+
+				<button
+					disabled={betAmount > balance || betAmount < 1 ? true : false}
+					onClick={getRandomDice}
+					className="w-full px-4 py-2 mt-4 font-semibold text-gray-800 bg-red-400 rounded-md"
+				>
+					Roll{" "}
+				</button>
 			</div>
 		</div>
 	);
