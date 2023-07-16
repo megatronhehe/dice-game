@@ -19,6 +19,7 @@ function App() {
 	const [betMethod, setBetMethod] = useState("even");
 	const [notif, setNotif] = useState(false);
 	const [notifMessage, setNotifMessage] = useState("");
+	const [history, setHistory] = useState([]);
 
 	const getRandomDice = () => {
 		const die1 = Math.floor(Math.random() * 5 + 1);
@@ -30,26 +31,45 @@ function App() {
 		setBetAmount(Number(e.target.value));
 	};
 
+	const addHistory = (result, amount, method) => {
+		const newHistory = {
+			die1: dice.die1,
+			die2: dice.die2,
+			result: result,
+			amount: amount,
+			method: method,
+		};
+		setHistory((prev) => [newHistory, ...prev]);
+	};
+
 	const betMethodEven = () => {
 		const diceCount = dice.die1 + dice.die2;
+		let result;
 		if (diceCount % 2 === 0) {
 			setBalance((prev) => prev + betAmount);
 			setNotifMessage(`+${betAmount}`);
+			result = "win";
 		} else {
 			setBalance((prev) => prev - betAmount);
 			setNotifMessage(`-${betAmount}`);
+			result = "lose";
 		}
+		addHistory(result, betAmount, "even");
 	};
 
 	const betMethodOdd = () => {
 		const diceCount = dice.die1 + dice.die2;
+		let result;
 		if (diceCount % 2 === 1) {
 			setBalance((prev) => prev + betAmount);
 			setNotifMessage(`+${betAmount}`);
+			result = "win";
 		} else {
 			setBalance((prev) => prev - betAmount);
 			setNotifMessage(`-${betAmount}`);
+			result = "lose";
 		}
+		addHistory(result, betAmount, "odd");
 	};
 
 	useEffect(() => {
@@ -84,6 +104,26 @@ function App() {
 		}
 	};
 
+	const historyElement = history.map((item) => {
+		const isWin = item.result === "win";
+		return (
+			<div
+				className={`flex flex-col items-center text-4xl ${
+					isWin ? "text-green-400" : "text-ref-400"
+				}`}
+			>
+				<p className="text-xs">{item.result}</p>
+				{diceElement(item.die1)}
+				{diceElement(item.die2)}
+				<p className="text-xs">{item.method}</p>
+				<p className="flex items-center gap-1 text-xs">
+					{isWin ? "+" : "-"}
+					{item.amount}
+				</p>
+			</div>
+		);
+	});
+
 	return (
 		<div className="flex items-center justify-center h-screen bg-gray-800 font-comfortaa">
 			<div className="relative w-full max-w-xl p-4 border border-gray-700 rounded-xl ">
@@ -97,6 +137,11 @@ function App() {
 						</div>
 					)}
 					<PiDiamondsFourFill />
+				</div>
+
+				{/* HISTORY */}
+				<div className="flex gap-2 p-2 mt-4 overflow-x-scroll font-bold text-red-400 border border-gray-700 rounded-md">
+					{historyElement}
 				</div>
 
 				{/* BET METHOD */}
