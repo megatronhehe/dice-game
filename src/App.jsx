@@ -11,6 +11,7 @@ import {
 	PiDiamondFill,
 	PiCoinBold,
 	PiArrowRightBold,
+	PiPlusSquareBold,
 } from "react-icons/pi";
 
 function App() {
@@ -236,6 +237,20 @@ function App() {
 						}`}
 					>
 						<p>{notifMessage}</p>
+					</div>
+				)}
+
+				{/* BROKE NOTIF */}
+				{balance < 1 && (
+					<div className="absolute right-0 flex items-center justify-center h-6 gap-2 p-2 mt-4 text-xs font-bold shadow-xl -top-12">
+						<p className="text-gray-500 ">you broke? :(</p>
+						<button
+							onClick={() => setBalance((prev) => prev + 100)}
+							className="flex items-center gap-1 text-yellow-400"
+						>
+							<PiPlusSquareBold className="text-xl" />
+							<p>100</p>
+						</button>
 					</div>
 				)}
 
