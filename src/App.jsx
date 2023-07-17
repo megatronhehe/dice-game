@@ -10,6 +10,7 @@ import {
 	PiDiamondsFourFill,
 	PiDiamondFill,
 	PiCoinBold,
+	PiArrowRightBold,
 } from "react-icons/pi";
 
 function App() {
@@ -58,11 +59,11 @@ function App() {
 			setNotifMessage(`-${betAmount}`);
 			result = "lose";
 		}
-		addHistory(result, betAmount, "even");
+		addHistory(result, result === "win" ? betAmount * 2 : betAmount, "even");
 	};
 
 	const betMethodOdd = () => {
-		const diceCount = dice.die1 + dice.die2;
+		const diceCount = countDice();
 		let result;
 		if (diceCount % 2 === 1) {
 			setBalance((prev) => prev + betAmount);
@@ -73,7 +74,21 @@ function App() {
 			setNotifMessage(`-${betAmount}`);
 			result = "lose";
 		}
-		addHistory(result, betAmount, "odd");
+		addHistory(result, result === "win" ? betAmount * 2 : betAmount, "odd");
+	};
+
+	const betMethodDoubles = () => {
+		let result;
+		if (dice.die1 === dice.die2) {
+			setBalance((prev) => prev + betAmount * 5);
+			setNotifMessage(`+${betAmount}`);
+			result = "win";
+		} else {
+			setBalance((prev) => prev - betAmount);
+			setNotifMessage(`-${betAmount}`);
+			result = "lose";
+		}
+		addHistory(result, result === "win" ? betAmount * 6 : betAmount, "doubles");
 	};
 
 	useEffect(() => {
@@ -83,6 +98,8 @@ function App() {
 				betMethodEven();
 			} else if (betMethod === "odd") {
 				betMethodOdd();
+			} else if (betMethod === "doubles") {
+				betMethodDoubles();
 			}
 			setTimeout(() => {
 				setNotif(false);
@@ -147,13 +164,16 @@ function App() {
 				</div>
 
 				{/* HISTORY */}
-				<div className="flex h-32 gap-4 p-2 mt-4 overflow-x-scroll font-bold text-red-400 border border-gray-700 rounded-md">
+				<div className="flex h-40 gap-4 p-2 mt-4 overflow-x-scroll font-bold text-red-400 border border-gray-700 rounded-md">
 					{history.length > 0 ? (
 						historyElement
 					) : (
-						<p className="w-full mt-8 text-sm text-center text-gray-500">
-							bet history goes here
-						</p>
+						<div className="w-full text-sm text-center text-gray-500 mt-14">
+							<p>bet history goes here</p>
+							<p className="flex items-center justify-center gap-4">
+								newest <PiArrowRightBold /> oldest
+							</p>
+						</div>
 					)}
 				</div>
 
@@ -170,7 +190,8 @@ function App() {
 									: null
 							}`}
 						>
-							even
+							<p>even</p>
+							<p>x2</p>
 						</button>
 						<button
 							onClick={() => {
@@ -182,7 +203,21 @@ function App() {
 									: null
 							}`}
 						>
-							odd
+							<p>odd</p>
+							<p>x2</p>
+						</button>
+						<button
+							onClick={() => {
+								setBetMethod("doubles");
+							}}
+							className={`p-2 border border-red-400 rounded-md ${
+								betMethod === "doubles"
+									? "bg-red-400 text-gray-800 border-gray-700"
+									: null
+							}`}
+						>
+							<p>doubles</p>
+							<p>x6</p>
 						</button>
 					</div>
 				</div>
