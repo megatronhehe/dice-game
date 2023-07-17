@@ -42,8 +42,12 @@ function App() {
 		setHistory((prev) => [newHistory, ...prev]);
 	};
 
+	const countDice = () => {
+		return dice.die1 + dice.die2;
+	};
+
 	const betMethodEven = () => {
-		const diceCount = dice.die1 + dice.die2;
+		const diceCount = countDice();
 		let result;
 		if (diceCount % 2 === 0) {
 			setBalance((prev) => prev + betAmount);
@@ -125,7 +129,7 @@ function App() {
 	});
 
 	return (
-		<div className="flex items-center justify-center h-screen bg-gray-800 font-comfortaa">
+		<div className="relative flex items-center justify-center h-screen bg-gray-800 font-comfortaa">
 			<div className="relative w-full max-w-xl p-4 border border-gray-700 rounded-xl ">
 				{/* DICE */}
 				<div className="flex items-center justify-around py-4 text-xl text-gray-600 bg-gray-700 rounded-xl">
@@ -137,11 +141,20 @@ function App() {
 						</div>
 					)}
 					<PiDiamondsFourFill />
+					<p className="absolute flex items-center justify-center w-16 h-16 text-red-400 bg-gray-800 border border-red-400 rounded-lg -top-8 text center">
+						{dice.die1 ? countDice() : "?"}
+					</p>
 				</div>
 
 				{/* HISTORY */}
-				<div className="flex gap-2 p-2 mt-4 overflow-x-scroll font-bold text-red-400 border border-gray-700 rounded-md">
-					{historyElement}
+				<div className="flex h-32 gap-4 p-2 mt-4 overflow-x-scroll font-bold text-red-400 border border-gray-700 rounded-md">
+					{history.length > 0 ? (
+						historyElement
+					) : (
+						<p className="w-full mt-8 text-sm text-center text-gray-500">
+							bet history goes here
+						</p>
+					)}
 				</div>
 
 				{/* BET METHOD */}
@@ -191,8 +204,8 @@ function App() {
 					</div>
 				)}
 
-				{/* BET AMOUNT */}
-				<div className="flex justify-between gap-2 p-2 mt-4 text-sm text-red-400 border border-gray-700 rounded-md ">
+				{/* BET OPTION PANEL */}
+				<div className="flex flex-col gap-2 p-2 mt-4 text-sm text-red-400 border border-gray-700 rounded-md sm:flex-row ">
 					<div className="flex gap-2">
 						<label
 							className="flex items-center px-2 bg-gray-700 rounded-md"
@@ -202,48 +215,51 @@ function App() {
 						</label>
 						<input
 							id="betAmount"
-							className="flex p-1 font-semibold text-center text-yellow-400 bg-gray-700 rounded-md outline-none"
+							className="flex w-full p-1 font-semibold text-center text-yellow-400 bg-gray-700 rounded-md outline-none"
 							type="number"
 							onChange={handleBetAmount}
 							value={betAmount}
 						/>
 					</div>
-					<button
-						onClick={() => setBetAmount((prev) => prev + 1)}
-						className="px-2 text-gray-500 border border-gray-700 rounded-md"
-					>
-						+1
-					</button>
-					<button
-						onClick={() => setBetAmount((prev) => prev + 10)}
-						className="px-2 text-gray-500 border border-gray-700 rounded-md"
-					>
-						+10
-					</button>
-					<button
-						onClick={() => setBetAmount((prev) => prev * 2)}
-						className="px-2 text-gray-500 border border-gray-700 rounded-md"
-					>
-						x2
-					</button>
-					<button
-						onClick={() => setBetAmount((prev) => prev / 2)}
-						className="px-2 text-gray-500 border border-gray-700 rounded-md"
-					>
-						1/2
-					</button>
-					<button
-						onClick={() => setBetAmount(balance)}
-						className="px-2 text-gray-500 border border-gray-700 rounded-md"
-					>
-						max
-					</button>
-					<button
-						onClick={() => setBetAmount(0)}
-						className="px-2 text-gray-500 border border-gray-700 rounded-md"
-					>
-						clear
-					</button>
+
+					<div className="flex flex-wrap gap-2">
+						<button
+							onClick={() => setBetAmount((prev) => prev + 1)}
+							className="px-2 text-gray-500 border border-gray-700 rounded-md"
+						>
+							+1
+						</button>
+						<button
+							onClick={() => setBetAmount((prev) => prev + 10)}
+							className="px-2 text-gray-500 border border-gray-700 rounded-md"
+						>
+							+10
+						</button>
+						<button
+							onClick={() => setBetAmount((prev) => prev * 2)}
+							className="px-2 text-gray-500 border border-gray-700 rounded-md"
+						>
+							x2
+						</button>
+						<button
+							onClick={() => setBetAmount((prev) => prev / 2)}
+							className="px-2 text-gray-500 border border-gray-700 rounded-md"
+						>
+							1/2
+						</button>
+						<button
+							onClick={() => setBetAmount(balance)}
+							className="px-2 text-gray-500 border border-gray-700 rounded-md"
+						>
+							max
+						</button>
+						<button
+							onClick={() => setBetAmount(0)}
+							className="px-2 text-gray-500 border border-gray-700 rounded-md"
+						>
+							clear
+						</button>
+					</div>
 				</div>
 
 				<button
